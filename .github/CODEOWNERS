@@ -6,8 +6,8 @@
 
 # Critical security files require security team approval
 .github/keys-whitelist.txt @sxcntqnt 
-.github/scripts/validate_keys.py @sxcntcnquntns
-.github/workflows/validate-keys.yml @sxcntcnquntns
+.github/scripts/validate_keys.py @sxcntqnt
+.github/workflows/validate-keys.yml @sxcntqnt
 
 # Keys directory requires infrastructure team approval
-keys/ @sxcntcnquntns
+keys/ @sxcntqnt
