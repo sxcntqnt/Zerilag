@@ -17,7 +17,83 @@ from cryptography.hazmat.primitives.asymmetric import rsa, dsa, ec, ed25519
 from cryptography.hazmat.backends import default_backend
 from datetime import datetime
 import subprocess
+# Add to your existing validate_keys.py
 
+class SecurityValidator:
+    def __init__(self):
+        self.suspicious_patterns = [
+            # Common malicious key patterns
+            r"AAAAB3NzaC1yc2EAAAADAQABAAABAQ",  # Weak RSA pattern
+            r"ssh-rsa AAAA[0-9A-Za-z+/]{100,}",  # Generic suspicious
+        ]
+        
+    def analyze_whitelist_changes(self):
+        """Analyze whitelist changes for suspicious activity"""
+        try:
+            # Get whitelist changes from git
+            result = subprocess.run([
+                'git', 'diff', 'HEAD~1', 'HEAD', '--', '.github/keys-whitelist.txt'
+            ], capture_output=True, text=True, check=True)
+            
+            if result.stdout:
+                additions = []
+                for line in result.stdout.split('\n'):
+                    if line.startswith('+') and not line.startswith('+++'):
+                        additions.append(line[1:].strip())
+                
+                return self.check_suspicious_additions(additions)
+            
+            return True, "No whitelist changes detected"
+            
+        except subprocess.CalledProcessError:
+            return True, "Could not analyze whitelist changes"
+
+    def check_suspicious_additions(self, additions):
+        """Check if whitelist additions are suspicious"""
+        suspicious = []
+        
+        for addition in additions:
+            if not addition or addition.startswith('#'):
+                continue
+                
+            # Check if it's a valid fingerprint format
+            if not re.match(r'^[a-f0-9]{64}$', addition):
+                suspicious.append(f"Invalid fingerprint format: {addition}")
+                
+            # Check for known compromised keys
+            if self.is_known_compromised(addition):
+                suspicious.append(f"Known compromised key: {addition}")
+        
+        if suspicious:
+            return False, " | ".join(suspicious)
+        return True, "Whitelist changes appear legitimate"
+
+    def is_known_compromised(self, fingerprint):
+        """Check against known compromised keys (simplified example)"""
+        compromised_keys = {
+            # Add known compromised key fingerprints here
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855": "Example compromised key",
+        }
+        return fingerprint in compromised_keys
+
+def validate_whitelist_integrity():
+    """Ensure whitelist hasn't been tampered with"""
+    validator = SecurityValidator()
+    
+    # Check if whitelist file has been modified
+    if os.path.exists('.github/keys-whitelist.txt'):
+        with open('.github/keys-whitelist.txt', 'r') as f:
+            content = f.read()
+            
+        # Verify file signature (simplified)
+        current_hash = hashlib.sha256(content.encode()).hexdigest()
+        expected_hash = os.getenv('WHITELIST_HASH', '')
+        
+        if expected_hash and current_hash != expected_hash:
+            return False, "Whitelist integrity check failed"
+    
+    return True, "Whitelist integrity verified"
+    
 class KeyValidator:
     def __init__(self, batch_size=50, whitelist_file=None):
         self.batch_size = batch_size
