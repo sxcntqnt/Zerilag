@@ -1,0 +1,40 @@
+# .github/workflows/required-checks.yml
+name: Required Checks
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  security-checks:
+    name: Security Requirements
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Check for whitelist modifications
+      id: whitelist-check
+      uses: dorny/paths-filter@v2
+      with:
+        filters: |
+          whitelist:
+            - '.github/keys-whitelist.txt'
+    
+    - name: Validate security approvals
+      if: steps.whitelist-check.outputs.whitelist == 'true'
+      run: |
+        # Check if security team has reviewed
+        if [[ "${{ github.event.pull_request.requested_teams }}" != *"security-team"* ]]; then
+          echo "❌ Security review required for whitelist changes"
+          exit 1
+        fi
+        
+        # Check number of approvals
+        if [[ "${{ github.event.pull_request.reviews.length }}" -lt 2 ]]; then
+          echo "❌ At least 2 reviews required for security changes"
+          exit 1
+        fi
+
+    - name: Verify commit signatures
+      run: |
+        git verify-commit ${{ github.event.pull_request.head.sha }}
+      continue-on-error: false
