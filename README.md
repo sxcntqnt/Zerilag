@@ -62,14 +62,33 @@ Usage
 
     The workflow automatically validates:
 
-        Key format and structure
+    Key format and structure
 
-        Cryptographic integrity
+    Cryptographic integrity
 
-        Duplicates across the entire repository
+    Duplicates across the entire repository
 
-        Security requirements (key sizes, weak keys)
+    Security requirements (key sizes, weak keys)
 
     Validation fails if any invalid keys are detected, preventing security issues from being introduced.
+
+Organization-level Security Settings
+In GitHub Organization Settings:
+
+    Required Two-factor Authentication
+
+        Settings → Security → Two-factor authentication required
+
+    Base Permissions
+
+        Settings → Member privileges → Base permissions: "Read"
+
+    Repository Creation
+
+        Settings → Member privileges → Repository creation: "Disable"
+
+    Security Manager Role
+
+        Create custom "Security Manager" role with limited permissions
 
 This solution efficiently handles both small concurrent pushes and large batch operations while maintaining security and performance.
