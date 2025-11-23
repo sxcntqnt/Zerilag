@@ -5,7 +5,7 @@
 # /infrastructure-team
 
 # Critical security files require security team approval
-.github/keys-whitelist.txt @sxcntcnquntns 
+.github/keys-whitelist.txt @sxcntqnt 
 .github/scripts/validate_keys.py @sxcntcnquntns
 .github/workflows/validate-keys.yml @sxcntcnquntns
 
