@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: validate-keys
+        name: Validate SSH Public Keys
+        entry: python .github/scripts/validate_keys.py --batch-size 20
+        language: system
+        files: '^keys/.*\.(pub|key)$'
+        pass_filenames: false
