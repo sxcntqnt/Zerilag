@@ -1,0 +1,9 @@
+# .github/CODEOWNERS
+
+# Critical security files require security team approval
+.github/keys-whitelist.txt @sxcntqnt/security-team @sxcntqnt/admins
+.github/scripts/validate_keys.py @sxcntqnt/security-team @sxcntqnt/admins
+.github/workflows/validate-keys.yml @sxcntqnt/security-team @sxcntqnt/admins
+
+# Keys directory requires infrastructure team approval
+keys/ @sxcntqnt/infrastructure-team
