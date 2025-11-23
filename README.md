@@ -86,6 +86,31 @@ In GitHub Organization Settings:
     Repository Creation
 
         Settings → Member privileges → Repository creation: "Disable"
+        
+Revoke all deployment keys
+
+    Settings → Deploy keys → Remove all
+
+Rollback suspicious commits
+bash
+
+git revert <suspicious-commit>
+
+    Rotate all secrets
+
+        Update GitHub secrets
+
+        Rotate deployment keys
+
+        Update CI/CD tokens
+
+Investigation
+
+    Check audit log: Settings → Security & analysis → Audit log
+
+    Review recent workflow runs
+
+    Check branch protection history
 
 Implementation Checklist
 
@@ -105,10 +130,16 @@ Implementation Checklist
 
     ✅ Set up monitoring for suspicious activities
 
-This multi-layered approach ensures that even if a malicious actor gains some access, they cannot modify the whitelist without going through proper security reviews and validations.
-
     Security Manager Role
 
         Create custom "Security Manager" role with limited permissions
 
-This solution efficiently handles both small concurrent pushes and large batch operations while maintaining security and performance.
+
+This multi-layered approach ensures that even if a malicious actor gains some access, they cannot modify the whitelist without going through proper security reviews and validations.
+
+
+
+
+
+
+
