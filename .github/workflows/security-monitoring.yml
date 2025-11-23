@@ -23,7 +23,7 @@ jobs:
         
         # Alert if unexpected users modified whitelist
         SUSPICIOUS_USERS=$(git log --pretty=format:"%an" -- .github/keys-whitelist.txt | sort | uniq)
-        EXPECTED_USERS="sxcntqnt, sxcntcnquntns"
+        EXPECTED_USERS="sxcntqnt"
         
         for user in $SUSPICIOUS_USERS; do
           if [[ ! " $EXPECTED_USERS " =~ " $user " ]]; then
